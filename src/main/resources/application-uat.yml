@@ -1,0 +1,64 @@
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,shutdown,info
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@10.1.9.178:2521/tncldb
+    driverClassName: oracle.jdbc.OracleDriver
+    username: ncl_apuser
+    password: nclap123
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    generate-ddl: false
+    #    hibernate:
+    #      ddl-auto: update
+    #    show-sql: true
+    properties:
+      hibernate:
+        default_schema: "ncl_apuser"
+        max_fetch_depth: 3
+        jdbc:
+          fetch_size: 50
+          batch_size: 30
+        show_sql: true
+        format_sql: true
+  log:
+    path: "/app/ncl/log"
+
+server:
+  port: 9080
+  address: 0.0.0.0
+  compression:
+    enabled: true
+
+grpc:
+  server:
+    port: 50001
+    address: "0.0.0.0"
+  serverSec:
+    port: 50002
+    address: "0.0.0.0"
+  client:
+    port: 50001
+    address: "0.0.0.0"
+
+astar:
+  binPath: "/app/ncl/astar/"
+
+request:
+  FD: "/app/ncl/FD/"
+
+apiNodes: >
+  apiNode_G61S0.yml,
+  apiNode_G61S1.yml,
+  apiNode_G62.yml,
+  apiNode_G0061.yml,
+  apiNode_G0067.yml,
+  apiNode_G6611.yml,
+  apiNode_ACENT.yml

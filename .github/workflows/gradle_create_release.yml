@@ -1,0 +1,64 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle create release
+# 當有人建立tag時,以該版本建置並建立release
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+        with:
+          arguments: build
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Upload bot-1.0-SNAPSHOT-boot.jar Release Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/bot-1.0-SNAPSHOT-boot.jar
+          asset_name: bot-1.0-SNAPSHOT-boot.jar
+          asset_content_type: application/java-archive
+
+      - name: Upload bot-1.0-SNAPSHOT-plain.jar Release Package
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./build/libs/bot-1.0-SNAPSHOT-plain.jar
+          asset_name: bot-1.0-SNAPSHOT-plain.jar
+          asset_content_type: application/java-archive

@@ -1,0 +1,68 @@
+management:
+  endpoint:
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,shutdown,info
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@220.135.109.130:1522:FREE
+    driverClassName: oracle.jdbc.OracleDriver
+    username: ncladmin
+    password: 1qaz2wsx
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    generate-ddl: false
+    #    hibernate:
+    #      ddl-auto: update
+    #    show-sql: true
+    properties:
+      hibernate:
+        default_schema: "ncladmin"
+        max_fetch_depth: 3
+        jdbc:
+          fetch_size: 50
+          batch_size: 30
+        show_sql: true
+        format_sql: true
+  log:
+    path: "C:\\BOT\\log"
+
+server:
+  port: 80
+  address: 0.0.0.0
+  compression:
+    enabled: true
+
+grpc:
+  server:
+    port: 8081
+    address: "0.0.0.0"
+  serverSec:
+    port: 8082
+    address: "0.0.0.0"
+  client:
+    port: 8081
+    address: "0.0.0.0"
+
+astar:
+  binPath: "/Users/adam/work/BOT/config/astar/"
+
+request:
+  FD: "/Users/adam/work/BOT/FD/"
+
+apiNodes: >
+  apiNode_G61S0.yml,
+  apiNode_G61S1.yml,
+  apiNode_G62.yml,
+  apiNode_G63.yml,
+  apiNode_G0061.yml,
+  apiNode_G0064.yml,
+  apiNode_G0065.yml,
+  apiNode_G0067.yml,
+  apiNode_G0121.yml,
+  apiNode_G6611.yml,
+  apiNode_ACENT.yml

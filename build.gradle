@@ -1,0 +1,186 @@
+buildscript {
+    dependencies {
+        classpath(
+                // https://plugins.gradle.org/plugin/org.hidetake.ssh
+                'org.hidetake:core:2.11.2'
+        )
+    }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+
+    id 'maven-publish'
+    id 'com.diffplug.spotless'
+}
+
+apply from: "$rootProject.projectDir/gradle/deploy/deploy.gradle"
+
+group = 'com.bot'
+version = '0.0.1-SNAPSHOT'
+
+def ioGrpcVer = '1.65.0' // CURRENT_GRPC_VERSION
+def protobufVer = '4.27.3'
+def mapStructVer = '1.5.5.Final'
+def jasperVer = '6.20.6'
+
+def swaggerAnnVer = '2.2.10'
+def jacksonVer = '2.15.2'
+def beanUtilVer = '1.9.4'
+def openfeign = '12.5'
+def jodaTime = '2.12.5'
+def commonsLang3 = '3.14.0'
+
+dependencies {
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    providedRuntime 'com.oracle.database.jdbc:ojdbc11'
+
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+//    TxControl
+//    implementation project(":txcontrol")
+    implementation("com.bot:txcontrol:1.0.0") {
+        changing = true
+    }
+
+
+//    加入本地子專案Service
+//    implementation project(":gs15clcmp")
+//    implementation project(":g61prestep")
+
+
+//    DB Service
+
+
+//    加入已上傳maven之服務
+//    implementation "com.bot.ncl:gs15clcmp:1.0.0"
+//    implementation "com.bot.ncl:g61prestep:1.0.0"
+//    implementation "com.bot.ncl:s61s1:1.0.0"
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.diffplug.spotless'
+
+    spotless {
+        java {
+            // Use the default importOrder configuration
+            importOrder()
+            removeUnusedImports()
+
+            googleJavaFormat().aosp().reflowLongStrings().groupArtifact('com.google.googlejavaformat:google-java-format')
+            formatAnnotations()
+
+            licenseHeader '/* (C) $YEAR */' // or licenseHeaderFile
+        }
+    }
+
+    ext {
+        set('snippetsDir', file("build/generated-snippets"))
+        set('springCloudVersion', "2021.0.8")
+    }
+
+    java {
+        sourceCompatibility = '17'
+    }
+
+    repositories {
+//        mavenLocal()
+        maven {
+            url 'http://220.135.109.130:8082/repository/bot_group_maven/'
+            allowInsecureProtocol = true
+        }
+    }
+
+    dependencies {
+        //        implementation 'org.springframework.boot:spring-boot-starter-actuator'
+        implementation 'org.springframework.boot:spring-boot-starter-batch'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-integration'
+        implementation 'org.springframework.integration:spring-integration-sftp'
+        implementation 'org.springframework.boot:spring-boot-starter-mail'
+//        implementation 'org.springframework.boot:spring-boot-starter-security'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+        implementation 'org.springframework.cloud:spring-cloud-starter-config'
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        implementation 'org.springframework.integration:spring-integration-jpa'
+        implementation 'org.springframework.integration:spring-integration-mail'
+//        implementation 'org.springframework.integration:spring-integration-security'
+//        implementation 'org.springframework.integration:spring-integration-webflux'
+
+
+        implementation "org.mapstruct:mapstruct:${mapStructVer}"
+        implementation "org.apache.commons:commons-lang3:${commonsLang3}"
+
+        implementation "net.sf.jasperreports:jasperreports:${jasperVer}"
+
+        implementation "com.google.protobuf:protobuf-java-util:${protobufVer}"
+//        implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${jacksonVer}"
+
+        implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+        implementation "commons-beanutils:commons-beanutils:${beanUtilVer}"
+
+        implementation "joda-time:joda-time:${jodaTime}"
+
+        implementation "io.github.openfeign:feign-okhttp:${openfeign}"
+        implementation "io.swagger.core.v3:swagger-annotations:${swaggerAnnVer}"
+
+        implementation "io.grpc:grpc-stub:${ioGrpcVer}"
+        implementation "io.grpc:grpc-protobuf:${ioGrpcVer}"
+        implementation "io.grpc:grpc-netty-shaded:${ioGrpcVer}"
+        implementation "io.grpc:grpc-api:${ioGrpcVer}"
+        implementation "io.grpc:grpc-netty:${ioGrpcVer}"
+
+
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapStructVer}"
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'io.projectreactor:reactor-test'
+        testImplementation 'org.springframework.batch:spring-batch-test'
+        testImplementation 'org.springframework.integration:spring-integration-test'
+//        testImplementation 'org.springframework.security:spring-security-test'
+    }
+
+    compileJava {
+        dependsOn 'spotlessApply'
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+/*
+    configurations {
+        developmentOnly
+        runtimeClasspath {
+            extendsFrom developmentOnly
+        }
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+*/
+}
+
+tasks.named("bootJar") {
+    archiveClassifier = 'boot'
+}
+
+tasks.named("bootWar") {
+    archiveClassifier = 'boot'
+}

@@ -1,0 +1,82 @@
+ctlflg: 0
+tbsdy: 1121023
+nbsdy: 1121024
+nnbsdy: 1121025
+n3bsdy: 1121026
+n4bsdy: 1121027
+n5bsdy: 1121030
+n6bsdy: 1121031
+lbsdy: 1121020
+llbsdy: 1121019
+l3bsdy: 1121018
+l4bsdy: 1121017
+l5bsdy: 1121016
+lmndy: 1120930
+tmndy: 1121031
+fnbsdy: 1121031
+lfnbsdy: 0
+ndycnt: 1
+nndycnt: 2
+n3dycnt: 3
+n4dycnt: 4
+n5dycnt: 7
+n6dycnt: 8
+ldycnt: 3
+lldycnt: 4
+l3dycnt: 5
+l4dycnt: 6
+l5dycnt: 7
+weekly: 1
+holidy: 0
+timecd: 0
+hhmmss: 133059
+todayctl: 1
+nextdyctl: 0
+daytonight: 0
+c001Ocurs:
+  - no: "55688"
+    brno: "000"
+    tcno: A1
+  - no: "55689"
+    brno: "000"
+    tcno: A2
+c002Ocurs:
+  - brno: "000"
+    sbrno: "000"
+    acflg: 1
+    brcls: 0
+    deptcls1: 0
+    deptcls2: 0
+    deptcls3: 0
+    deptcls4: 0
+    deptcls5: 0
+    deptcls6: 0
+    deptcls7: 0
+    deptcls8: 0
+    deptcls9: 0
+    deptcls10: 0
+    ru1tm: "085000"
+    tcclsn: 1
+  - brno: "001"
+    sbrno: "000"
+    acflg: 1
+    brcls: 0
+    deptcls1: 0
+    deptcls2: 0
+    deptcls3: 0
+    deptcls4: 0
+    deptcls5: 0
+    deptcls6: 0
+    deptcls7: 0
+    deptcls8: 0
+    deptcls9: 0
+    deptcls10: 0
+    ru1tm: "085000"
+    tcclsn: 1
+currList:
+  - curcd: "00"
+    swfnam: TWD
+  - curcd: "01"
+    swfnam: USD
+  - curcd: "02"
+    swfnam: HKD
